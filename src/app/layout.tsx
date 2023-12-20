@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import HuddleContextProvider from "@/context/HuddleContextProvider";
 
 export const metadata: Metadata = {
   title: "Studio01",
@@ -14,7 +15,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <HuddleContextProvider>{children}</HuddleContextProvider>
+      </body>
     </html>
   );
 }
