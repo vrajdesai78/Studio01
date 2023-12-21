@@ -6,6 +6,7 @@ import {
 } from "@huddle01/react/hooks";
 import { Avatar } from "./ui/avatar";
 import { useEffect, useRef } from "react";
+import Video from "./Media/Video";
 
 interface RemotePeerProps {
   peerId: string;
@@ -31,22 +32,17 @@ const RemotePeer = ({ peerId }: RemotePeerProps) => {
   }, [audioStream]);
 
   return (
-    <div className="bg-gray-800 rounded-lg flex flex-col items-center justify-center">
+    <div className="bg-gray-800 relative rounded-lg flex flex-col items-center justify-center">
       {videoStream ? (
-        <video
-          ref={videoRef}
-          autoPlay
-          muted
-          className="h-full w-full object-cover rounded-lg"
-        />
+        <Video stream={videoStream} />
       ) : (
-        <>
-          <div className="flex text-3xl font-semibold items-center justify-center w-24 h-24 bg-gray-700 text-gray-200 rounded-full">
-            {metadata?.displayName?.[0].toUpperCase()}
-          </div>
-          <p className="text-gray-200 text-xl mt-2">{metadata?.displayName}</p>
-        </>
+        <div className="flex text-3xl font-semibold items-center justify-center w-24 h-24 bg-gray-700 text-gray-200 rounded-full">
+          {metadata?.displayName?.[0].toUpperCase()}
+        </div>
       )}
+      <span className="absolute bottom-4 left-4 text-gray-200 font-medium">
+        {metadata?.displayName}
+      </span>
       {audioStream && <audio ref={audioRef} autoPlay className="hidden" />}
     </div>
   );

@@ -4,6 +4,7 @@ import RemotePeer from "@/components/remotePeer";
 import { useStudioState } from "@/store/studioState";
 import { BasicIcons } from "@/utils/BasicIcons";
 import {
+  useDataMessage,
   useLocalPeer,
   useLocalVideo,
   usePeerIds,
@@ -19,22 +20,35 @@ import { useEffect, useRef, useState } from "react";
 import BottomBar from "@/components/bottomBar";
 import { Button } from "@/components/ui/button";
 import { PeerMetadata } from "@/utils/types";
-import ButtonWithIcon from "@/components/ui/buttonWithIcon";
 import ChatBar from "@/components/sidebars/chatbar";
 import MediaBar from "@/components/sidebars/mediaBar";
-import ParticipantsBar from "@/components/sidebars/participantsBar";
+import ParticipantsBar from "@/components/sidebars/participantsSidebar/participantsBar";
 import SettingsDialog from "@/components/settingsDialog";
+import Video from "@/components/Media/Video";
+import { Role } from "@huddle01/server-sdk/auth";
 
 export default function Component({ params }: { params: { roomId: string } }) {
   const { stream } = useLocalVideo();
   const { name, isChatOpen, isMediaOpen, isParticipantsOpen } =
     useStudioState();
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { peerIds } = usePeerIds();
+  const { peerIds } = usePeerIds({
+    roles: [Role.HOST, Role.CO_HOST, Role.SPEAKER],
+  });
   const [isCopied, setIsCopied] = useState(false);
   const { metadata } = useLocalPeer<PeerMetadata>();
   const { state } = useRoom();
   const router = useRouter();
+  const { peerId } = useLocalPeer();
+
+  useDataMessage({
+    onMessage(payload, from, label) {
+      if (label === "playMusic" && from !== peerId) {
+        const audio = new Audio(payload);
+        audio.play();
+      }
+    },
+  });
 
   useEffect(() => {
     if (videoRef.current && stream) {
@@ -42,11 +56,11 @@ export default function Component({ params }: { params: { roomId: string } }) {
     }
   }, [stream]);
 
-  // useEffect(() => {
-  //   if (state === "idle") {
-  //     router.push(`${params.roomId}/lobby`);
-  //   }
-  // }, [state]);
+  useEffect(() => {
+    if (state === "idle") {
+      router.push(`${params.roomId}/lobby`);
+    }
+  }, [state]);
 
   return (
     <div className="flex flex-col h-screen bg-black">
@@ -88,12 +102,7 @@ export default function Component({ params }: { params: { roomId: string } }) {
         <section className="flex-1 grid grid-cols-2 gap-4 px-4">
           <div className="bg-gray-800 relative rounded-lg flex flex-col items-center justify-center">
             {stream ? (
-              <video
-                ref={videoRef}
-                autoPlay
-                muted
-                className="h-full w-full object-cover rounded-lg"
-              />
+              <Video stream={stream} />
             ) : (
               <div className="flex text-3xl font-semibold items-center justify-center w-24 h-24 bg-gray-700 text-gray-200 rounded-full">
                 {name[0]?.toUpperCase()}

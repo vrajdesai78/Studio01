@@ -9,6 +9,12 @@ interface StudioState {
   setIsMediaOpen: (isMediaOpen: boolean) => void;
   isParticipantsOpen: boolean;
   setIsParticipantsOpen: (isParticipantsOpen: boolean) => void;
+  audioInputDevice: MediaDeviceInfo;
+  setAudioInputDevice: (audioInputDevice: MediaDeviceInfo) => void;
+  videoDevice: MediaDeviceInfo;
+  setVideoDevice: (videoDevice: MediaDeviceInfo) => void;
+  audioOutputDevice: MediaDeviceInfo;
+  setAudioOutputDevice: (audioOutputDevice: MediaDeviceInfo) => void;
 }
 
 export const useStudioState = create<StudioState>((set) => ({
@@ -32,4 +38,10 @@ export const useStudioState = create<StudioState>((set) => ({
     set({ isChatOpen: false });
     set({ isMediaOpen: false });
   },
+  audioInputDevice: {} as MediaDeviceInfo,
+  setAudioInputDevice: (audioInputDevice) => set({ audioInputDevice }),
+  videoDevice: {} as MediaDeviceInfo,
+  setVideoDevice: (videoDevice) => set({ videoDevice }),
+  audioOutputDevice: {} as MediaDeviceInfo,
+  setAudioOutputDevice: (audioOutputDevice) => set({ audioOutputDevice }),
 }));

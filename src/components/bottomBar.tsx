@@ -19,7 +19,7 @@ const BottomBar = () => {
 
   return (
     <footer className="flex items-center justify-between p-4">
-      <Button className="flex gap-2 bg-red-600 text-white text-md font-semibold">
+      <Button className="flex gap-2 bg-red-500 text-white text-md font-semibold">
         {BasicIcons.record} Record
       </Button>
       <div className="flex space-x-3 ml-8">
