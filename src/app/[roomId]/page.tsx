@@ -20,7 +20,7 @@ import { useEffect, useRef, useState } from "react";
 import BottomBar from "@/components/bottomBar";
 import { Button } from "@/components/ui/button";
 import { PeerMetadata } from "@/utils/types";
-import ChatBar from "@/components/sidebars/chatbar";
+import ChatBar from "@/components/sidebars/ChatBar/chatbar";
 import MediaBar from "@/components/sidebars/mediaBar";
 import ParticipantsBar from "@/components/sidebars/participantsSidebar/participantsBar";
 import SettingsDialog from "@/components/settingsDialog";
@@ -39,6 +39,7 @@ export default function Component({ params }: { params: { roomId: string } }) {
     showAcceptRequest,
     addRequestedPeers,
     removeRequestedPeers,
+    addChatMessage,
   } = useStudioState();
   const videoRef = useRef<HTMLVideoElement>(null);
   const { peerIds } = usePeerIds({
@@ -62,13 +63,25 @@ export default function Component({ params }: { params: { roomId: string } }) {
         const audio = new Audio(payload);
         audio.play();
       }
-      if (label === "requestForMainStage" && from !== peerId) {
+      if (
+        label === "requestForMainStage" &&
+        from !== peerId &&
+        (role === Role.HOST || role === Role.CO_HOST)
+      ) {
         setShowAcceptRequest(true);
         addRequestedPeers(from);
         setRequestedPeerId(from);
         setTimeout(() => {
           setShowAcceptRequest(false);
         }, 5000);
+      }
+      if (label === "chat") {
+        const { message, name } = JSON.parse(payload);
+        addChatMessage({
+          name: name,
+          text: message,
+          isUser: from === peerId,
+        });
       }
     },
   });

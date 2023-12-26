@@ -1,5 +1,11 @@
 import { create } from "zustand";
 
+export interface IChatMessage {
+  name: string;
+  text: string;
+  isUser: boolean;
+}
+
 interface StudioState {
   name: string;
   setName: (name: string) => void;
@@ -20,6 +26,8 @@ interface StudioState {
   requestedPeers: string[];
   addRequestedPeers: (val: string) => void;
   removeRequestedPeers: (val: string) => void;
+  chatMessages: IChatMessage[];
+  addChatMessage: (val: IChatMessage) => void;
 }
 
 export const useStudioState = create<StudioState>((set) => ({
@@ -60,6 +68,12 @@ export const useStudioState = create<StudioState>((set) => ({
   removeRequestedPeers: (val: string) => {
     set((state) => ({
       requestedPeers: state.requestedPeers.filter((peer) => peer !== val),
+    }));
+  },
+  chatMessages: [],
+  addChatMessage: (val: IChatMessage) => {
+    set((state) => ({
+      chatMessages: [...state.chatMessages, val],
     }));
   },
 }));
