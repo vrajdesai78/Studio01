@@ -61,13 +61,16 @@ const PeerData = ({ peerId }: PeerDataProps) => {
                   {role === Role.HOST ? (
                     <button
                       className="flex items-center gap-2"
-                      onClick={() => {}}
+                      onClick={leaveRoom}
                     >
                       <span>{BasicIcons.endCall}</span>
                       <span>Leave Studio</span>
                     </button>
                   ) : (
-                    <button className="flex items-center gap-2">
+                    <button
+                      className="flex items-center gap-2"
+                      onClick={() => kickPeer(peerId)}
+                    >
                       <span>{BasicIcons.close}</span>
                       <span>Kick Participant</span>
                     </button>

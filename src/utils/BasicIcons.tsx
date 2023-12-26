@@ -387,7 +387,7 @@ export const BasicIcons = {
       stroke-width="1.5"
       stroke="currentColor"
       data-slot="icon"
-      className="w-6 h-6"
+      className="w-4 h-4"
     >
       <path
         stroke-linecap="round"
@@ -439,6 +439,23 @@ export const BasicIcons = {
         strokeLinecap="round"
         strokeLinejoin="round"
         d="M9 9.563C9 9.252 9.252 9 9.563 9h4.874c.311 0 .563.252.563.563v4.874c0 .311-.252.563-.563.563H9.564A.562.562 0 0 1 9 14.437V9.564Z"
+      />
+    </svg>
+  ),
+
+  send: (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke-width="1.5"
+      stroke="currentColor"
+      className="w-4 h-4"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5"
       />
     </svg>
   ),

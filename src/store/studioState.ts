@@ -15,6 +15,11 @@ interface StudioState {
   setVideoDevice: (videoDevice: MediaDeviceInfo) => void;
   audioOutputDevice: MediaDeviceInfo;
   setAudioOutputDevice: (audioOutputDevice: MediaDeviceInfo) => void;
+  showAcceptRequest: boolean;
+  setShowAcceptRequest: (val: boolean) => void;
+  requestedPeers: string[];
+  addRequestedPeers: (val: string) => void;
+  removeRequestedPeers: (val: string) => void;
 }
 
 export const useStudioState = create<StudioState>((set) => ({
@@ -44,4 +49,17 @@ export const useStudioState = create<StudioState>((set) => ({
   setVideoDevice: (videoDevice) => set({ videoDevice }),
   audioOutputDevice: {} as MediaDeviceInfo,
   setAudioOutputDevice: (audioOutputDevice) => set({ audioOutputDevice }),
+  showAcceptRequest: false,
+  setShowAcceptRequest: (val) => set({ showAcceptRequest: val }),
+  requestedPeers: [],
+  addRequestedPeers: (val: string) => {
+    set((state) => ({
+      requestedPeers: [...state.requestedPeers, val],
+    }));
+  },
+  removeRequestedPeers: (val: string) => {
+    set((state) => ({
+      requestedPeers: state.requestedPeers.filter((peer) => peer !== val),
+    }));
+  },
 }));

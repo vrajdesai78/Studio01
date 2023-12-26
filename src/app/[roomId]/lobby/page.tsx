@@ -12,6 +12,7 @@ import { useLocalPeer, useRoom } from "@huddle01/react/hooks";
 import { useLocalAudio, useLocalVideo } from "@huddle01/react/hooks";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import toast from "react-hot-toast";
 
 const Lobby = ({ params }: { params: { roomId: string } }) => {
   const { isAudioOn, enableAudio, disableAudio } = useLocalAudio();
@@ -91,6 +92,10 @@ const Lobby = ({ params }: { params: { roomId: string } }) => {
           <Button
             className="flex gap-2 bg-gray-200"
             onClick={async () => {
+              if (!name) {
+                toast.error("Please enter your name");
+                return;
+              }
               setIsJoining(true);
               const response = await fetch(`/token?roomId=${params.roomId}`);
               const token = await response.text();
