@@ -11,6 +11,24 @@ const ChatBar = () => {
   const [message, setMessage] = useState("");
   const { metadata } = useLocalPeer<PeerMetadata>();
 
+  const sendMessage = () => {
+    sendData({
+      to: "*",
+      payload: JSON.stringify({
+        message,
+        name: metadata?.displayName,
+      }),
+      label: "chat",
+    });
+    setMessage("");
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
+  };
+
   return (
     <div className="flex w-80 rounded-lg mr-4 flex-col h-full bg-gray-800 text-white">
       <div className="px-4 py-2 border-b border-gray-700">
@@ -26,19 +44,11 @@ const ChatBar = () => {
             placeholder="Type your message"
             onChange={(e) => setMessage(e.target.value)}
             value={message}
+            onKeyDown={handleKeyDown}
           />
           <Button
             className="bg-gray-700 hover:bg-gray-600 text-gray-200"
-            onClick={() =>
-              sendData({
-                to: "*",
-                payload: JSON.stringify({
-                  message,
-                  name: metadata?.displayName,
-                }),
-                label: "chat",
-              })
-            }
+            onClick={sendMessage}
           >
             {BasicIcons.send}
           </Button>

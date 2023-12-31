@@ -34,7 +34,7 @@ const RemotePeer = ({ peerId }: RemotePeerProps) => {
   return (
     <div className="bg-gray-800 relative rounded-lg flex flex-col items-center justify-center">
       {videoStream ? (
-        <Video stream={videoStream} />
+        <Video stream={videoStream} name={metadata?.displayName ?? "guest"} />
       ) : (
         <div className="flex text-3xl font-semibold items-center justify-center w-24 h-24 bg-gray-700 text-gray-200 rounded-full">
           {metadata?.displayName?.[0].toUpperCase()}

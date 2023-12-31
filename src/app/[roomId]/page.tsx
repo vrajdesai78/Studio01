@@ -23,10 +23,13 @@ import { PeerMetadata } from "@/utils/types";
 import ChatBar from "@/components/sidebars/ChatBar/chatbar";
 import MediaBar from "@/components/sidebars/mediaBar";
 import ParticipantsBar from "@/components/sidebars/participantsSidebar/participantsBar";
-import SettingsDialog from "@/components/settingsDialog";
+import SettingsDialog from "@/components/Settings/settingsDialog";
 import Video from "@/components/Media/Video";
 import { Role } from "@huddle01/server-sdk/auth";
 import AcceptRequest from "@/components/RequestModal";
+import { roomDB } from "@/utils/redis";
+import clsx from "clsx";
+import { useEffectOnce } from "usehooks-ts";
 
 export default function Component({ params }: { params: { roomId: string } }) {
   const { stream } = useLocalVideo();
@@ -40,6 +43,8 @@ export default function Component({ params }: { params: { roomId: string } }) {
     addRequestedPeers,
     removeRequestedPeers,
     addChatMessage,
+    activeBg,
+    setActiveBg,
   } = useStudioState();
   const videoRef = useRef<HTMLVideoElement>(null);
   const { peerIds } = usePeerIds({
@@ -83,8 +88,19 @@ export default function Component({ params }: { params: { roomId: string } }) {
           isUser: from === peerId,
         });
       }
+      if (label === "bgChange" && from !== peerId) {
+        setActiveBg(payload);
+      }
     },
   });
+
+  const getRoomData = async () => {
+    const roomData = await roomDB.get(params.roomId);
+    if (roomData) {
+      const { background: backgroundImage } = roomData as any;
+      setActiveBg(backgroundImage);
+    }
+  };
 
   useEffect(() => {
     if (videoRef.current && stream) {
@@ -98,8 +114,14 @@ export default function Component({ params }: { params: { roomId: string } }) {
     }
   }, [state]);
 
+  useEffectOnce(() => {
+    if (activeBg === "bg-black") {
+      getRoomData();
+    }
+  });
+
   return (
-    <div className="flex flex-col h-screen bg-black">
+    <div className={clsx("flex flex-col h-screen bg-black")}>
       <header className="flex items-center justify-between p-4">
         <h1 className="text-white text-xl font-semibold">Studio01</h1>
         <div className="flex space-x-3">
@@ -134,12 +156,25 @@ export default function Component({ params }: { params: { roomId: string } }) {
           <SettingsDialog />
         </div>
       </header>
-      <main className="transition-all ease-in-out flex flex-1 duration-300">
+      <main
+        className={`transition-all ease-in-out flex flex-1 duration-300 py-4 w-full h-full`}
+        style={{
+          backgroundColor: activeBg === "bg-black" ? "black" : undefined,
+          backgroundImage:
+            activeBg === "bg-black" ? undefined : `url(${activeBg})`,
+          backgroundPosition: "center",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+        }}
+      >
         <section className="flex-1 grid grid-cols-2 gap-4 px-4">
           {role !== Role.LISTENER ? (
             <div className="bg-gray-800 relative rounded-lg flex flex-col items-center justify-center">
               {stream ? (
-                <Video stream={stream} />
+                <Video
+                  stream={stream}
+                  name={metadata?.displayName ?? "guest"}
+                />
               ) : (
                 <div className="flex text-3xl font-semibold items-center justify-center w-24 h-24 bg-gray-700 text-gray-200 rounded-full">
                   {name[0]?.toUpperCase()}

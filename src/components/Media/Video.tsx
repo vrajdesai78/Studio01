@@ -1,6 +1,12 @@
 import React, { useEffect, useRef } from "react";
+import VideoRecorder from "../Recorder/VideoRecorder";
 
-const Video = ({ stream }: { stream: MediaStream }) => {
+interface VideoProps {
+  stream: MediaStream;
+  name: string;
+}
+
+const Video = ({ stream, name }: VideoProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
@@ -24,12 +30,15 @@ const Video = ({ stream }: { stream: MediaStream }) => {
   }, [stream]);
 
   return (
-    <video
-      className="h-full w-full rounded-lg object-cover -scaleY-100"
-      ref={videoRef}
-      autoPlay
-      muted
-    />
+    <>
+      <video
+        className="h-full w-full rounded-lg object-cover -scaleY-100"
+        ref={videoRef}
+        autoPlay
+        muted
+      />
+      <VideoRecorder stream={stream} name={name} />
+    </>
   );
 };
 

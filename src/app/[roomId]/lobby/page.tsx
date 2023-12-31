@@ -1,5 +1,6 @@
 "use client";
 
+import { metadata } from "@/app/layout";
 import Video from "@/components/Media/Video";
 import ChangeDevice from "@/components/changeDevice";
 import { Button } from "@/components/ui/button";
@@ -20,7 +21,7 @@ const Lobby = ({ params }: { params: { roomId: string } }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const { name, setName } = useStudioState();
   const router = useRouter();
-  const { updateMetadata } = useLocalPeer<PeerMetadata>();
+  const { updateMetadata, metadata } = useLocalPeer<PeerMetadata>();
   const [isJoining, setIsJoining] = useState(false);
   const { joinRoom } = useRoom({
     onJoin: () => {
@@ -45,7 +46,12 @@ const Lobby = ({ params }: { params: { roomId: string } }) => {
           </span>
           <Card className="relative p-4 w-full h-full">
             <div className="w-full h-full min-w-60 min-h-48 bg-gray-800 rounded-lg">
-              {stream && <Video stream={stream} />}
+              {stream && (
+                <Video
+                  stream={stream}
+                  name={metadata?.displayName ?? "guest"}
+                />
+              )}
             </div>
             <div className="absolute bottom-6 right-0 left-0 justify-center flex gap-2 w-full">
               <ChangeDevice deviceType="cam">

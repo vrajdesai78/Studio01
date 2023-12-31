@@ -1,12 +1,20 @@
-import { useLocalAudio, useLocalVideo, useRoom } from "@huddle01/react/hooks";
+"use client";
+import {
+  useLocalAudio,
+  useLocalPeer,
+  useLocalVideo,
+  useRoom,
+} from "@huddle01/react/hooks";
 import { Button } from "@/components/ui/button";
 import { BasicIcons } from "@/utils/BasicIcons";
 import { useStudioState } from "@/store/studioState";
 import ButtonWithIcon from "./ui/buttonWithIcon";
+import Recorder from "./Recorder/VideoRecorder";
+import { PeerMetadata } from "@/utils/types";
 
 const BottomBar = () => {
   const { isAudioOn, enableAudio, disableAudio } = useLocalAudio();
-  const { isVideoOn, enableVideo, disableVideo } = useLocalVideo();
+  const { isVideoOn, enableVideo, disableVideo, stream } = useLocalVideo();
   const { leaveRoom } = useRoom();
   const {
     isChatOpen,
@@ -15,12 +23,17 @@ const BottomBar = () => {
     setIsMediaOpen,
     isParticipantsOpen,
     setIsParticipantsOpen,
+    isRecording,
+    setIsRecording,
   } = useStudioState();
 
   return (
     <footer className="flex items-center justify-between p-4">
-      <Button className="flex gap-2 bg-red-500 text-white text-md font-semibold">
-        {BasicIcons.record} Record
+      <Button
+        className="flex gap-2 bg-red-500 hover:bg-red-400 text-white text-md font-semibold"
+        onClick={() => setIsRecording(!isRecording)}
+      >
+        {BasicIcons.record} {isRecording ? "Stop" : "Record"}
       </Button>
       <div className="flex space-x-3 ml-8">
         <ButtonWithIcon

@@ -6,6 +6,13 @@ export interface IChatMessage {
   isUser: boolean;
 }
 
+export interface BoxPosition {
+  x: number;
+  y: number;
+  width: string;
+  height: string;
+}
+
 interface StudioState {
   name: string;
   setName: (name: string) => void;
@@ -28,6 +35,12 @@ interface StudioState {
   removeRequestedPeers: (val: string) => void;
   chatMessages: IChatMessage[];
   addChatMessage: (val: IChatMessage) => void;
+  activeBg: string;
+  setActiveBg: (val: string) => void;
+  boxPosition: BoxPosition;
+  setBoxPosition: (val: BoxPosition) => void;
+  isRecording: boolean;
+  setIsRecording: (val: boolean) => void;
 }
 
 export const useStudioState = create<StudioState>((set) => ({
@@ -76,4 +89,10 @@ export const useStudioState = create<StudioState>((set) => ({
       chatMessages: [...state.chatMessages, val],
     }));
   },
+  activeBg: "bg-black",
+  setActiveBg: (val: string) => set({ activeBg: val }),
+  boxPosition: { x: 0, y: 0, width: "200", height: "200" },
+  setBoxPosition: (val: BoxPosition) => set({ boxPosition: val }),
+  isRecording: false,
+  setIsRecording: (val: boolean) => set({ isRecording: val })
 }));
