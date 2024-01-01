@@ -1,6 +1,7 @@
 import { useStudioState } from "@/store/studioState";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { roomDB } from "@/utils/redis";
 
 interface AudioRecorderProps {
   stream: MediaStream | null;

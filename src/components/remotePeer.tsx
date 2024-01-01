@@ -7,6 +7,7 @@ import {
 import { Avatar } from "./ui/avatar";
 import { useEffect, useRef } from "react";
 import Video from "./Media/Video";
+import Audio from "./Media/Audio";
 
 interface RemotePeerProps {
   peerId: string;
@@ -16,20 +17,6 @@ const RemotePeer = ({ peerId }: RemotePeerProps) => {
   const { stream: videoStream } = useRemoteVideo({ peerId });
   const { stream: audioStream } = useRemoteAudio({ peerId });
   const { metadata } = useRemotePeer<PeerMetadata>({ peerId });
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const audioRef = useRef<HTMLAudioElement>(null);
-
-  useEffect(() => {
-    if (videoRef.current && videoStream) {
-      videoRef.current.srcObject = videoStream;
-    }
-  }, [videoStream]);
-
-  useEffect(() => {
-    if (audioRef.current && audioStream) {
-      audioRef.current.srcObject = audioStream;
-    }
-  }, [audioStream]);
 
   return (
     <div className="bg-gray-800 relative rounded-lg flex flex-col items-center justify-center">
@@ -43,7 +30,7 @@ const RemotePeer = ({ peerId }: RemotePeerProps) => {
       <span className="absolute bottom-4 left-4 text-gray-200 font-medium">
         {metadata?.displayName}
       </span>
-      {audioStream && <audio ref={audioRef} autoPlay className="hidden" />}
+      {audioStream && <Audio stream={audioStream} name={metadata?.displayName ?? "guest"}/>}
     </div>
   );
 };

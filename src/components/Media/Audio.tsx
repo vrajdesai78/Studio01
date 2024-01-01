@@ -1,8 +1,10 @@
 import { useDevices } from "@huddle01/react/hooks";
 import React, { useEffect, useRef } from "react";
+import AudioRecorder from "../Recorder/AudioRecorder";
 
 interface IAudioProps {
   stream: MediaStream;
+  name: string;
 }
 
 type HTMLAudioElementWithSetSinkId = HTMLAudioElement & {
@@ -15,7 +17,7 @@ const Audio: React.FC<
       React.AudioHTMLAttributes<HTMLAudioElementWithSetSinkId>,
       HTMLAudioElementWithSetSinkId
     >
-> = ({ stream }) => {
+> = ({ stream, name }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   const { preferredDevice: audioOutputDevice } = useDevices({
@@ -48,7 +50,12 @@ const Audio: React.FC<
     }
   }, [audioOutputDevice]);
 
-  return <audio ref={audioRef}>Audio</audio>;
+  return (
+    <>
+      <audio ref={audioRef}>Audio</audio>
+      <AudioRecorder stream={stream} name="audio" />
+    </>
+  );
 };
 
 export default Audio;
