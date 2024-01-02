@@ -5,6 +5,9 @@ import { useStudioState } from "@/store/studioState";
 import { BasicIcons } from "@/utils/BasicIcons";
 import {
   useDataMessage,
+  useDevices,
+  useLocalAudio,
+  useLocalMedia,
   useLocalPeer,
   useLocalVideo,
   usePeerIds,
@@ -30,9 +33,23 @@ import AcceptRequest from "@/components/RequestModal";
 import { roomDB } from "@/utils/redis";
 import clsx from "clsx";
 import { useEffectOnce } from "usehooks-ts";
+import AudioRecorder from "@/components/Recorder/AudioRecorder";
 
 export default function Component({ params }: { params: { roomId: string } }) {
-  const { stream } = useLocalVideo();
+  const { isVideoOn, enableVideo, disableVideo, stream } = useLocalVideo();
+  const {
+    isAudioOn,
+    enableAudio,
+    disableAudio,
+    stream: audioStream,
+  } = useLocalAudio();
+  const { fetchStream } = useLocalMedia();
+  const { setPreferredDevice: setCamPrefferedDevice } = useDevices({
+    type: "cam",
+  });
+  const { setPreferredDevice: setAudioPrefferedDevice } = useDevices({
+    type: "mic",
+  });
   const {
     name,
     isChatOpen,
@@ -45,6 +62,8 @@ export default function Component({ params }: { params: { roomId: string } }) {
     addChatMessage,
     activeBg,
     setActiveBg,
+    videoDevice,
+    audioInputDevice,
   } = useStudioState();
   const videoRef = useRef<HTMLVideoElement>(null);
   const { peerIds } = usePeerIds({
@@ -114,6 +133,38 @@ export default function Component({ params }: { params: { roomId: string } }) {
     }
   }, [state]);
 
+  useEffect(() => {
+    setCamPrefferedDevice(videoDevice.deviceId);
+    if (isVideoOn) {
+      disableVideo();
+      const changeVideo = async () => {
+        const { stream } = await fetchStream({
+          mediaDeviceKind: "cam",
+        });
+        if (stream) {
+          enableVideo(stream);
+        }
+      };
+      changeVideo();
+    }
+  }, [videoDevice]);
+
+  useEffect(() => {
+    setAudioPrefferedDevice(audioInputDevice.deviceId);
+    if (isAudioOn) {
+      disableAudio();
+      const changeAudio = async () => {
+        const { stream } = await fetchStream({
+          mediaDeviceKind: "mic",
+        });
+        if (stream) {
+          enableAudio(stream);
+        }
+      };
+      changeAudio();
+    }
+  }, [audioInputDevice]);
+
   useEffectOnce(() => {
     if (activeBg === "bg-black") {
       getRoomData();
@@ -171,10 +222,18 @@ export default function Component({ params }: { params: { roomId: string } }) {
           {role !== Role.LISTENER ? (
             <div className="bg-gray-800 relative rounded-lg flex flex-col items-center justify-center">
               {stream ? (
-                <Video
-                  stream={stream}
-                  name={metadata?.displayName ?? "guest"}
-                />
+                <>
+                  <Video
+                    stream={stream}
+                    name={metadata?.displayName ?? "guest"}
+                  />
+                  {isAudioOn && (
+                    <AudioRecorder
+                      stream={audioStream}
+                      name={metadata?.displayName ?? "guest"}
+                    />
+                  )}
+                </>
               ) : (
                 <div className="flex text-3xl font-semibold items-center justify-center w-24 h-24 bg-gray-700 text-gray-200 rounded-full">
                   {name[0]?.toUpperCase()}

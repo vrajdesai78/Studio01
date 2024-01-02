@@ -1,7 +1,7 @@
 "use client";
 
 import { useDevices } from "@huddle01/react/hooks";
-import { FC } from "react";
+import { FC, use } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -9,7 +9,7 @@ import {
   TooltipTrigger,
 } from "./ui/tooltip";
 import { BasicIcons } from "@/utils/BasicIcons";
-import { Button } from "./ui/button";
+import { useStudioState } from "@/store/studioState";
 
 interface ChangeDeviceProps {
   deviceType: "mic" | "cam" | "speaker";
@@ -17,13 +17,21 @@ interface ChangeDeviceProps {
 }
 
 const ChangeDevice: FC<ChangeDeviceProps> = ({ children, deviceType }) => {
-  const { devices, setPreferredDevice, preferredDevice } = useDevices({
+  const {
+    audioInputDevice,
+    videoDevice,
+    audioOutputDevice,
+    setAudioInputDevice,
+    setVideoDevice,
+    setAudioOutputDevice,
+  } = useStudioState();
+  const { devices } = useDevices({
     type: deviceType,
   });
 
   return (
     <>
-      <TooltipProvider>
+      <TooltipProvider delayDuration={100}>
         <Tooltip>
           <TooltipTrigger asChild>{children}</TooltipTrigger>
           <TooltipContent>
@@ -31,12 +39,29 @@ const ChangeDevice: FC<ChangeDeviceProps> = ({ children, deviceType }) => {
               <button
                 key={device.deviceId}
                 onClick={() => {
-                  setPreferredDevice(device.deviceId);
+                  switch (deviceType) {
+                    case "mic":
+                      setAudioInputDevice(device);
+                      break;
+                    case "cam":
+                      setVideoDevice(device);
+                      break;
+                    case "speaker":
+                      setAudioOutputDevice(device);
+                      break;
+                  }
                 }}
                 className="flex gap-2 p-2 gray-800 w-full rounded-lg hover:bg-gray-700"
               >
                 <span>
-                  {preferredDevice?.deviceId === device.deviceId &&
+                  {deviceType === "mic" &&
+                    audioInputDevice?.label === device.label &&
+                    BasicIcons.selected}
+                  {deviceType === "cam" &&
+                    videoDevice?.label === device.label &&
+                    BasicIcons.selected}
+                  {deviceType === "speaker" &&
+                    audioOutputDevice?.label === device.label &&
                     BasicIcons.selected}
                 </span>
                 {device.label}

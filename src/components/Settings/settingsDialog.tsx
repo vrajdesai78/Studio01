@@ -37,9 +37,6 @@ export default function Component() {
             </TabsContent>
           </div>
         </Tabs>
-        <DialogFooter>
-          <Button type="submit">Save All Changes</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

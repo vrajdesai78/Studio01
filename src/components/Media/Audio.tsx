@@ -53,7 +53,7 @@ const Audio: React.FC<
   return (
     <>
       <audio ref={audioRef}>Audio</audio>
-      <AudioRecorder stream={stream} name="audio" />
+      <AudioRecorder stream={stream} name={name} />
     </>
   );
 };

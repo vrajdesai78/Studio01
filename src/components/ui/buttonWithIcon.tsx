@@ -1,6 +1,7 @@
 interface ButtonWithIconProps {
   children: React.ReactNode;
   onClick: () => void;
+  
 }
 
 const ButtonWithIcon = ({ children, onClick }: ButtonWithIconProps) => {

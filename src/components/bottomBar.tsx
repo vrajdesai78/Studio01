@@ -1,5 +1,6 @@
 "use client";
 import {
+  useDevices,
   useLocalAudio,
   useLocalPeer,
   useLocalVideo,
@@ -11,6 +12,8 @@ import { useStudioState } from "@/store/studioState";
 import ButtonWithIcon from "./ui/buttonWithIcon";
 import Recorder from "./Recorder/VideoRecorder";
 import { PeerMetadata } from "@/utils/types";
+import ChangeDevice from "./changeDevice";
+import { useEffect } from "react";
 
 const BottomBar = () => {
   const { isAudioOn, enableAudio, disableAudio } = useLocalAudio();
@@ -36,28 +39,42 @@ const BottomBar = () => {
         {BasicIcons.record} {isRecording ? "Stop" : "Record"}
       </Button>
       <div className="flex space-x-3 ml-8">
-        <ButtonWithIcon
-          onClick={() => {
-            if (isVideoOn) {
-              disableVideo();
-            } else {
-              enableVideo();
-            }
-          }}
-        >
-          {isVideoOn ? BasicIcons.on.cam : BasicIcons.off.cam}
-        </ButtonWithIcon>
-        <ButtonWithIcon
-          onClick={() => {
-            if (isAudioOn) {
-              disableAudio();
-            } else {
-              enableAudio();
-            }
-          }}
-        >
-          {isAudioOn ? BasicIcons.on.mic : BasicIcons.off.mic}
-        </ButtonWithIcon>
+        <ChangeDevice deviceType="cam">
+          <button
+            onClick={() => {
+              if (isVideoOn) {
+                disableVideo();
+              } else {
+                enableVideo();
+              }
+            }}
+            className="bg-gray-600/50 p-2.5 rounded-lg"
+          >
+            {isVideoOn ? BasicIcons.on.cam : BasicIcons.off.cam}
+          </button>
+        </ChangeDevice>
+        <ChangeDevice deviceType="mic">
+          <button
+            onClick={() => {
+              if (isAudioOn) {
+                disableAudio();
+              } else {
+                enableAudio();
+              }
+            }}
+            className="bg-gray-600/50 p-2.5 rounded-lg"
+          >
+            {isAudioOn ? BasicIcons.on.mic : BasicIcons.off.mic}
+          </button>
+        </ChangeDevice>
+        <ChangeDevice deviceType="speaker">
+          <button
+            onClick={() => {}}
+            className="bg-gray-600/50 p-2.5 rounded-lg"
+          >
+            {BasicIcons.speaker}
+          </button>
+        </ChangeDevice>
         <ButtonWithIcon onClick={() => {}}>{BasicIcons.screen}</ButtonWithIcon>
         <ButtonWithIcon onClick={leaveRoom}>{BasicIcons.end}</ButtonWithIcon>
       </div>

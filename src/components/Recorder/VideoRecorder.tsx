@@ -2,6 +2,8 @@ import { useStudioState } from "@/store/studioState";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { roomDB } from "@/utils/redis";
+import { roomDetails } from "@/utils/types";
+import { useRoom } from "@huddle01/react/hooks";
 
 interface VideoRecorderProps {
   stream: MediaStream | null;
@@ -12,6 +14,7 @@ const VideoRecorder = ({ stream, name }: VideoRecorderProps) => {
   const [videoChunks, setVideoChunks] = useState<Blob[]>([]);
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const { isRecording } = useStudioState();
+  const { room } = useRoom();
 
   const startRecording = () => {
     if (stream === null) {
@@ -45,7 +48,16 @@ const VideoRecorder = ({ stream, name }: VideoRecorderProps) => {
         method: "POST",
         body: formData,
       }).then(async (res) => {
-        console.log(await res.text());
+        const getData = (await roomDB.get(
+          room.roomId as string
+        )) as roomDetails;
+        const recordingUrl = await res.text();
+        const recordingList = getData?.audioRecordings || [];
+        recordingList.push(recordingUrl);
+        await roomDB.set(room.roomId as string, {
+          ...getData,
+          recordingList: recordingList,
+        });
       });
     };
   };

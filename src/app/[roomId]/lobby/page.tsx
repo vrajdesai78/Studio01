@@ -9,7 +9,12 @@ import { Input } from "@/components/ui/input";
 import { useStudioState } from "@/store/studioState";
 import { BasicIcons } from "@/utils/BasicIcons";
 import { PeerMetadata } from "@/utils/types";
-import { useLocalPeer, useRoom } from "@huddle01/react/hooks";
+import {
+  useDevices,
+  useLocalMedia,
+  useLocalPeer,
+  useRoom,
+} from "@huddle01/react/hooks";
 import { useLocalAudio, useLocalVideo } from "@huddle01/react/hooks";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -18,6 +23,14 @@ import toast from "react-hot-toast";
 const Lobby = ({ params }: { params: { roomId: string } }) => {
   const { isAudioOn, enableAudio, disableAudio } = useLocalAudio();
   const { stream, isVideoOn, enableVideo, disableVideo } = useLocalVideo();
+  const { setPreferredDevice: setCamPrefferedDevice } = useDevices({
+    type: "cam",
+  });
+  const { setPreferredDevice: setAudioPrefferedDevice } = useDevices({
+    type: "mic",
+  });
+  const { audioInputDevice, videoDevice } = useStudioState();
+  const { fetchStream } = useLocalMedia();
   const videoRef = useRef<HTMLVideoElement>(null);
   const { name, setName } = useStudioState();
   const router = useRouter();
@@ -36,6 +49,38 @@ const Lobby = ({ params }: { params: { roomId: string } }) => {
       videoRef.current.srcObject = stream;
     }
   }, [stream]);
+
+  useEffect(() => {
+    setCamPrefferedDevice(videoDevice.deviceId);
+    if (isVideoOn) {
+      disableVideo();
+      const changeVideo = async () => {
+        const { stream } = await fetchStream({
+          mediaDeviceKind: "cam",
+        });
+        if (stream) {
+          enableVideo(stream);
+        }
+      };
+      changeVideo();
+    }
+  }, [videoDevice]);
+
+  useEffect(() => {
+    setAudioPrefferedDevice(audioInputDevice.deviceId);
+    if (isAudioOn) {
+      disableAudio();
+      const changeAudio = async () => {
+        const { stream } = await fetchStream({
+          mediaDeviceKind: "mic",
+        });
+        if (stream) {
+          enableAudio(stream);
+        }
+      };
+      changeAudio();
+    }
+  }, [audioInputDevice]);
 
   return (
     <div className="w-full min-h-screen p-8 flex flex-col items-center justify-center text-gray-200">

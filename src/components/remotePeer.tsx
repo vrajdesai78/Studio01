@@ -4,8 +4,6 @@ import {
   useRemotePeer,
   useRemoteVideo,
 } from "@huddle01/react/hooks";
-import { Avatar } from "./ui/avatar";
-import { useEffect, useRef } from "react";
 import Video from "./Media/Video";
 import Audio from "./Media/Audio";
 
@@ -30,7 +28,9 @@ const RemotePeer = ({ peerId }: RemotePeerProps) => {
       <span className="absolute bottom-4 left-4 text-gray-200 font-medium">
         {metadata?.displayName}
       </span>
-      {audioStream && <Audio stream={audioStream} name={metadata?.displayName ?? "guest"}/>}
+      {audioStream && (
+        <Audio stream={audioStream} name={metadata?.displayName ?? "guest"} />
+      )}
     </div>
   );
 };

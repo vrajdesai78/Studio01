@@ -41,6 +41,8 @@ interface StudioState {
   setBoxPosition: (val: BoxPosition) => void;
   isRecording: boolean;
   setIsRecording: (val: boolean) => void;
+  isUploading: boolean;
+  setIsUploading: (val: boolean) => void;
 }
 
 export const useStudioState = create<StudioState>((set) => ({
@@ -94,5 +96,7 @@ export const useStudioState = create<StudioState>((set) => ({
   boxPosition: { x: 0, y: 0, width: "200", height: "200" },
   setBoxPosition: (val: BoxPosition) => set({ boxPosition: val }),
   isRecording: false,
-  setIsRecording: (val: boolean) => set({ isRecording: val })
+  setIsRecording: (val: boolean) => set({ isRecording: val }),
+  isUploading: false,
+  setIsUploading: (val: boolean) => set({ isUploading: val }),
 }));
