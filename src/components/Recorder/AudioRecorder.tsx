@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { roomDB } from "@/utils/redis";
 import { useRoom } from "@huddle01/react/hooks";
 import { roomDetails } from "@/utils/types";
+import { nanoid } from "nanoid";
 
 interface AudioRecorderProps {
   stream: MediaStream | null;
@@ -44,17 +45,20 @@ const AudioRecorder = ({ stream, name }: AudioRecorderProps) => {
       const blob = new Blob(audioChunks, { type: "audio/webm" });
       const formData = new FormData();
       formData.append("file", blob);
-      fetch(`/upload?fileName=${name}.webm`, {
+      fetch(`/upload?fileName=${nanoid(3)}-${name}.webm`, {
         method: "POST",
         body: formData,
       }).then(async (res) => {
-        const getData = await roomDB.get(room.roomId as string) as roomDetails;
+        const getData = (await roomDB.get(
+          room.roomId as string
+        )) as roomDetails;
         const recordingUrl = await res.text();
         const recordingList = getData?.audioRecordings || [];
+        console.log("Audio list", recordingList);
         recordingList.push(recordingUrl);
         await roomDB.set(room.roomId as string, {
           ...getData,
-          recordingList: recordingList,
+          audioRecordings: recordingList,
         });
       });
     };

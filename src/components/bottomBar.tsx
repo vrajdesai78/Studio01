@@ -28,6 +28,7 @@ const BottomBar = () => {
     setIsParticipantsOpen,
     isRecording,
     setIsRecording,
+    isUploading,
   } = useStudioState();
 
   return (
@@ -36,7 +37,8 @@ const BottomBar = () => {
         className="flex gap-2 bg-red-500 hover:bg-red-400 text-white text-md font-semibold"
         onClick={() => setIsRecording(!isRecording)}
       >
-        {BasicIcons.record} {isRecording ? "Stop" : "Record"}
+        {isUploading ? BasicIcons.spin : BasicIcons.record}{" "}
+        {isRecording ? (isUploading ? "Uploading..." : "Stop") : "Record"}
       </Button>
       <div className="flex space-x-3 ml-8">
         <ChangeDevice deviceType="cam">

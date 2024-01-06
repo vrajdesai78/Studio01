@@ -1,6 +1,5 @@
 "use client";
 
-import { metadata } from "@/app/layout";
 import Video from "@/components/Media/Video";
 import ChangeDevice from "@/components/changeDevice";
 import { Button } from "@/components/ui/button";

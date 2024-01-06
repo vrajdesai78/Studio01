@@ -142,7 +142,7 @@ export default function Component({ params }: { params: { roomId: string } }) {
           mediaDeviceKind: "cam",
         });
         if (stream) {
-          enableVideo(stream);
+          await enableVideo(stream);
         }
       };
       changeVideo();

@@ -15,16 +15,12 @@ const Video = ({ stream, name }: VideoProps) => {
     if (videoObj && stream) {
       videoObj.srcObject = stream;
       videoObj.onloadedmetadata = async () => {
-        console.warn("videoCard() | Metadata loaded...");
         try {
           videoObj.muted = true;
           await videoObj.play();
         } catch (error) {
           console.error(error);
         }
-      };
-      videoObj.onerror = () => {
-        console.error("videoCard() | Error is hapenning...");
       };
     }
   }, [stream]);

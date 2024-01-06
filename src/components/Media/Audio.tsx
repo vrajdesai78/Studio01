@@ -30,7 +30,6 @@ const Audio: React.FC<
     if (audioObj && stream) {
       audioObj.srcObject = stream;
       audioObj.onloadedmetadata = async () => {
-        console.warn("audioCard() | Metadata loaded...");
         try {
           await audioObj.play();
         } catch (error) {
