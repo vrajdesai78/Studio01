@@ -86,7 +86,7 @@ const Lobby = ({ params }: { params: { roomId: string } }) => {
       <div className="flex justify-center items-center w-full max-w-md p-4 rounded-lg shadow">
         <div className="flex flex-col gap-2">
           <span className="font-extrabold text-2xl">
-            Let's check your cam and mic
+            Let&apos;s check your cam and mic
           </span>
           <Card className="relative p-4 w-full h-full">
             <div className="w-full h-full min-w-60 min-h-48 bg-gray-800 rounded-lg">
