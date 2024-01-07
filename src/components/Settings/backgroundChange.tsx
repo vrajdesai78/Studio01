@@ -3,12 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import clsx from "clsx";
 import { useStudioState } from "@/store/studioState";
 import { Avatar, AvatarImage } from "../ui/avatar";
-import {
-  useDataMessage,
-  useLocalPeer,
-  useRoom,
-  useRoomMetadata,
-} from "@huddle01/react/hooks";
+import { useDataMessage, useLocalPeer, useRoom } from "@huddle01/react/hooks";
 import { PeerMetadata, roomDetails } from "@/utils/types";
 import toast from "react-hot-toast";
 import { roomDB } from "@/utils/redis";
@@ -22,13 +17,18 @@ const BackgroundChange = () => {
   const [backgroundImages, setBackgroundImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
 
-  const handleBgChange = (bg: string) => {
+  const handleBgChange = async (bg: string) => {
     if (role === "host") {
       setActiveBg(bg);
       sendData({
         to: "*",
         payload: bg,
         label: "bgChange",
+      });
+      const getData = (await roomDB.get(room.roomId as string)) as roomDetails;
+      await roomDB.set(room.roomId as string, {
+        ...getData,
+        activeBackground: bg,
       });
     } else {
       toast.error("Only the host can change the background");

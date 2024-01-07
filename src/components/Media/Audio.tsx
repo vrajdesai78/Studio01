@@ -1,6 +1,7 @@
 import { useDevices } from "@huddle01/react/hooks";
 import React, { useEffect, useRef } from "react";
 import AudioRecorder from "../Recorder/AudioRecorder";
+import { useStudioState } from "@/store/studioState";
 
 interface IAudioProps {
   stream: MediaStream;
@@ -19,10 +20,7 @@ const Audio: React.FC<
     >
 > = ({ stream, name }) => {
   const audioRef = useRef<HTMLAudioElement>(null);
-
-  const { preferredDevice: audioOutputDevice } = useDevices({
-    type: "speaker",
-  });
+  const { isRecordAudio, audioOutputDevice } = useStudioState();
 
   useEffect(() => {
     const audioObj = audioRef.current;
@@ -52,7 +50,7 @@ const Audio: React.FC<
   return (
     <>
       <audio ref={audioRef}>Audio</audio>
-      <AudioRecorder stream={stream} name={name} />
+      {isRecordAudio && <AudioRecorder stream={stream} name={name} />}
     </>
   );
 };

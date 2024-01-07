@@ -12,6 +12,7 @@ import {
   useLocalVideo,
   usePeerIds,
   useRoom,
+  useRoomMetadata,
 } from "@huddle01/react/hooks";
 import {
   DropdownMenu,
@@ -22,7 +23,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import BottomBar from "@/components/bottomBar";
 import { Button } from "@/components/ui/button";
-import { PeerMetadata } from "@/utils/types";
+import { PeerMetadata, roomDetails } from "@/utils/types";
 import ChatBar from "@/components/sidebars/ChatBar/chatbar";
 import MediaBar from "@/components/sidebars/mediaBar";
 import ParticipantsBar from "@/components/sidebars/participantsSidebar/participantsBar";
@@ -64,6 +65,7 @@ export default function Component({ params }: { params: { roomId: string } }) {
     setActiveBg,
     videoDevice,
     audioInputDevice,
+    isRecordAudio,
   } = useStudioState();
   const videoRef = useRef<HTMLVideoElement>(null);
   const { peerIds } = usePeerIds({
@@ -82,7 +84,7 @@ export default function Component({ params }: { params: { roomId: string } }) {
   });
 
   const { sendData } = useDataMessage({
-    onMessage(payload, from, label) {
+    async onMessage(payload, from, label) {
       if (label === "playMusic" && from !== peerId) {
         const audio = new Audio(payload);
         audio.play();
@@ -110,14 +112,24 @@ export default function Component({ params }: { params: { roomId: string } }) {
       if (label === "bgChange" && from !== peerId) {
         setActiveBg(payload);
       }
+      if (label === "server-message") {
+        const { s3URL } = JSON.parse(payload);
+        const getData = (await roomDB.get(`${params.roomId}`)) as roomDetails;
+        const recordings = getData?.recordings || [];
+        recordings.push(s3URL);
+        await roomDB.set(`${params.roomId}`, {
+          ...getData,
+          recordings,
+        });
+      }
     },
   });
 
   const getRoomData = async () => {
-    const roomData = await roomDB.get(params.roomId);
-    if (roomData) {
-      const { background: backgroundImage } = roomData as any;
-      setActiveBg(backgroundImage);
+    const roomData = (await roomDB.get(params.roomId)) as roomDetails;
+    const activeBackground = roomData?.activeBackground;
+    if (activeBackground) {
+      setActiveBg(activeBackground);
     }
   };
 
@@ -227,7 +239,7 @@ export default function Component({ params }: { params: { roomId: string } }) {
                     stream={stream}
                     name={metadata?.displayName ?? "guest"}
                   />
-                  {isAudioOn && (
+                  {isAudioOn && isRecordAudio && (
                     <AudioRecorder
                       stream={audioStream}
                       name={metadata?.displayName ?? "guest"}

@@ -1,24 +1,15 @@
 "use client";
-import {
-  useDevices,
-  useLocalAudio,
-  useLocalPeer,
-  useLocalVideo,
-  useRoom,
-} from "@huddle01/react/hooks";
+import { useLocalAudio, useLocalVideo, useRoom } from "@huddle01/react/hooks";
 import { Button } from "@/components/ui/button";
 import { BasicIcons } from "@/utils/BasicIcons";
 import { useStudioState } from "@/store/studioState";
 import ButtonWithIcon from "./ui/buttonWithIcon";
-import Recorder from "./Recorder/VideoRecorder";
-import { PeerMetadata } from "@/utils/types";
 import ChangeDevice from "./changeDevice";
-import { useEffect } from "react";
 
 const BottomBar = () => {
   const { isAudioOn, enableAudio, disableAudio } = useLocalAudio();
   const { isVideoOn, enableVideo, disableVideo, stream } = useLocalVideo();
-  const { leaveRoom } = useRoom();
+  const { leaveRoom, room } = useRoom();
   const {
     isChatOpen,
     setIsChatOpen,
@@ -31,11 +22,31 @@ const BottomBar = () => {
     isUploading,
   } = useStudioState();
 
+  const handleRecording = async () => {
+    if (isRecording) {
+      const stopRecording = await fetch(
+        `/rec/stopRecording?roomId=${room.roomId}`
+      );
+      const res = await stopRecording.json();
+      if (res) {
+        setIsRecording(false);
+      }
+    } else {
+      const startRecording = await fetch(
+        `/rec/startRecording?roomId=${room.roomId}`
+      );
+      const { msg } = await startRecording.json();
+      if (msg) {
+        setIsRecording(true);
+      }
+    }
+  };
+
   return (
     <footer className="flex items-center justify-between p-4">
       <Button
         className="flex gap-2 bg-red-500 hover:bg-red-400 text-white text-md font-semibold"
-        onClick={() => setIsRecording(!isRecording)}
+        onClick={handleRecording}
       >
         {isUploading ? BasicIcons.spin : BasicIcons.record}{" "}
         {isRecording ? (isUploading ? "Uploading..." : "Stop") : "Record"}

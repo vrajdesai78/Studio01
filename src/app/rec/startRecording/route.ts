@@ -4,7 +4,7 @@ import { Recorder } from "@huddle01/server-sdk/recorder";
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const roomId = searchParams.get("roomId");
-  
+
   if (!roomId) {
     return new Response("Missing roomId", { status: 400 });
   }
@@ -38,7 +38,7 @@ export async function GET(request: Request) {
   const recording = await recorder.startRecording({
     roomId: roomId as string,
     token,
-    customLayoutUrl: `https://0d4c-2409-40c1-5001-cd70-a8fb-80fb-3c73-1360.ngrok-free.app/rec/${roomId}?token=${token}`,
+    customLayoutUrl: `https://studio-01.vercel.app/rec/${roomId}?token=${token}`,
   });
 
   console.log("recording started", recording);

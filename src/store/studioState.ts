@@ -43,6 +43,10 @@ interface StudioState {
   setIsRecording: (val: boolean) => void;
   isUploading: boolean;
   setIsUploading: (val: boolean) => void;
+  isRecordAudio: boolean;
+  setIsRecordAudio: (val: boolean) => void;
+  isRecordVideo: boolean;
+  setIsRecordVideo: (val: boolean) => void;
 }
 
 export const useStudioState = create<StudioState>((set) => ({
@@ -99,4 +103,8 @@ export const useStudioState = create<StudioState>((set) => ({
   setIsRecording: (val: boolean) => set({ isRecording: val }),
   isUploading: false,
   setIsUploading: (val: boolean) => set({ isUploading: val }),
+  isRecordAudio: false,
+  setIsRecordAudio: (val: boolean) => set({ isRecordAudio: val }),
+  isRecordVideo: false,
+  setIsRecordVideo: (val: boolean) => set({ isRecordVideo: val }),
 }));

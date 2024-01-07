@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import VideoRecorder from "../Recorder/VideoRecorder";
+import { useStudioState } from "@/store/studioState";
 
 interface VideoProps {
   stream: MediaStream;
@@ -8,6 +9,7 @@ interface VideoProps {
 
 const Video = ({ stream, name }: VideoProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { isRecordVideo } = useStudioState();
 
   useEffect(() => {
     const videoObj = videoRef.current;
@@ -33,7 +35,7 @@ const Video = ({ stream, name }: VideoProps) => {
         autoPlay
         muted
       />
-      <VideoRecorder stream={stream} name={name} />
+      {isRecordVideo && <VideoRecorder stream={stream} name={name} />}
     </>
   );
 };

@@ -11,6 +11,7 @@ import {
 import { TabsTrigger, TabsList, Tabs, TabsContent } from "@/components/ui/tabs";
 import { BasicIcons } from "@/utils/BasicIcons";
 import BackgroundChange from "./backgroundChange";
+import RecordSettings from "./recordSettings";
 
 export default function Component() {
   return (
@@ -31,7 +32,9 @@ export default function Component() {
               <TabsTrigger value="background">Background</TabsTrigger>
               <TabsTrigger value="general">Record</TabsTrigger>
             </TabsList>
-            <TabsContent value="general"></TabsContent>
+            <TabsContent value="general">
+              <RecordSettings />
+            </TabsContent>
             <TabsContent value="background">
               <BackgroundChange />
             </TabsContent>
