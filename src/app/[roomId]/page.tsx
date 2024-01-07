@@ -35,6 +35,7 @@ import { roomDB } from "@/utils/redis";
 import clsx from "clsx";
 import { useEffectOnce } from "usehooks-ts";
 import AudioRecorder from "@/components/Recorder/AudioRecorder";
+import GridContainer from "@/components/GridContainer";
 
 export default function Component({ params }: { params: { roomId: string } }) {
   const { isVideoOn, enableVideo, disableVideo, stream } = useLocalVideo();
@@ -220,7 +221,7 @@ export default function Component({ params }: { params: { roomId: string } }) {
         </div>
       </header>
       <main
-        className={`transition-all ease-in-out flex flex-1 duration-300 py-4 w-full h-full`}
+        className={`transition-all ease-in-out flex items-center justify-center flex-1 duration-300 py-4 w-full h-full`}
         style={{
           backgroundColor: activeBg === "bg-black" ? "black" : undefined,
           backgroundImage:
@@ -230,9 +231,9 @@ export default function Component({ params }: { params: { roomId: string } }) {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <section className="flex-1 grid grid-cols-2 gap-4 px-4">
+        <section className="flex flex-wrap justify-center w-full h-full gap-4 px-4">
           {role !== Role.LISTENER ? (
-            <div className="bg-gray-800 relative rounded-lg flex flex-col items-center justify-center">
+            <GridContainer>
               {stream ? (
                 <>
                   <Video
@@ -254,9 +255,9 @@ export default function Component({ params }: { params: { roomId: string } }) {
               <span className="absolute bottom-4 left-4 text-gray-200 font-medium">
                 {`${metadata?.displayName} (You)`}
               </span>
-            </div>
+            </GridContainer>
           ) : (
-            <div className="bg-gray-800 rounded-lg flex flex-col items-center justify-center gap-2">
+            <GridContainer className="gap-2">
               <span className="text-xl font-bold">
                 Send Request For Main Stage
               </span>
@@ -275,10 +276,10 @@ export default function Component({ params }: { params: { roomId: string } }) {
               >
                 {isRequestSent ? "Request Sent" : "Send Request"}
               </Button>
-            </div>
+            </GridContainer>
           )}
           {peerIds.length === 0 && (
-            <div className="bg-gray-800 rounded-lg flex flex-col items-center justify-center">
+            <GridContainer>
               <span className="text-xl font-bold">Invite People</span>
               <span className="text-gray-400">
                 Share the link to invite people to this studio
@@ -301,7 +302,7 @@ export default function Component({ params }: { params: { roomId: string } }) {
                   {isCopied ? "Copied" : "Copy"}
                 </Button>
               </div>
-            </div>
+            </GridContainer>
           )}
           {peerIds.map((peerId) => (
             <RemotePeer key={peerId} peerId={peerId} />

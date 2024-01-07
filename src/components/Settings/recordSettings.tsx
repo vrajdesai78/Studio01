@@ -7,7 +7,7 @@ const RecordSettings = () => {
     useStudioState();
 
   return (
-    <Card className="max-w-2xl">
+    <Card className="w-96 max-w-2xl">
       <CardHeader>
         <CardTitle className="text-xl">Recording</CardTitle>
       </CardHeader>

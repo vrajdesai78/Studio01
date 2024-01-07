@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { roomDB } from "@/utils/redis";
 import { useRoom } from "@huddle01/react/hooks";
-import { roomDetails } from "@/utils/types";
+import { Recording, roomDetails } from "@/utils/types";
 import { nanoid } from "nanoid";
 
 interface AudioRecorderProps {
@@ -55,7 +55,9 @@ const AudioRecorder = ({ stream, name }: AudioRecorderProps) => {
         const recordingUrl = await res.text();
         const recordingList = getData?.audioRecordings || [];
         console.log("Audio list", recordingList);
-        recordingList.push(recordingUrl);
+        recordingList.push({
+          [name]: recordingUrl,
+        } as Recording);
         await roomDB.set(room.roomId as string, {
           ...getData,
           audioRecordings: recordingList,

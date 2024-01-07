@@ -6,6 +6,7 @@ import {
 } from "@huddle01/react/hooks";
 import Video from "./Media/Video";
 import Audio from "./Media/Audio";
+import GridContainer from "./GridContainer";
 
 interface RemotePeerProps {
   peerId: string;
@@ -17,7 +18,7 @@ const RemotePeer = ({ peerId }: RemotePeerProps) => {
   const { metadata } = useRemotePeer<PeerMetadata>({ peerId });
 
   return (
-    <div className="bg-gray-800 relative rounded-lg flex flex-col items-center justify-center">
+    <GridContainer>
       {videoStream ? (
         <Video stream={videoStream} name={metadata?.displayName ?? "guest"} />
       ) : (
@@ -31,7 +32,7 @@ const RemotePeer = ({ peerId }: RemotePeerProps) => {
       {audioStream && (
         <Audio stream={audioStream} name={metadata?.displayName ?? "guest"} />
       )}
-    </div>
+    </GridContainer>
   );
 };
 

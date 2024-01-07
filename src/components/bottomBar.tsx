@@ -1,15 +1,30 @@
 "use client";
-import { useLocalAudio, useLocalVideo, useRoom } from "@huddle01/react/hooks";
+import {
+  useDataMessage,
+  useLocalAudio,
+  useLocalPeer,
+  useLocalVideo,
+  usePeerIds,
+  useRoom,
+} from "@huddle01/react/hooks";
 import { Button } from "@/components/ui/button";
 import { BasicIcons } from "@/utils/BasicIcons";
 import { useStudioState } from "@/store/studioState";
 import ButtonWithIcon from "./ui/buttonWithIcon";
 import ChangeDevice from "./changeDevice";
+import { Role } from "@huddle01/server-sdk/auth";
+import { useState } from "react";
+import { PeerMetadata } from "@/utils/types";
 
 const BottomBar = () => {
   const { isAudioOn, enableAudio, disableAudio } = useLocalAudio();
-  const { isVideoOn, enableVideo, disableVideo, stream } = useLocalVideo();
+  const { isVideoOn, enableVideo, disableVideo } = useLocalVideo();
+  const { sendData } = useDataMessage();
   const { leaveRoom, room } = useRoom();
+  const { role, metadata } = useLocalPeer<PeerMetadata>();
+  const { peerIds } = usePeerIds({ roles: [Role.HOST, Role.CO_HOST] });
+  const [isRequestSent, setIsRequestSent] = useState(false);
+
   const {
     isChatOpen,
     setIsChatOpen,
@@ -44,13 +59,33 @@ const BottomBar = () => {
 
   return (
     <footer className="flex items-center justify-between p-4">
-      <Button
-        className="flex gap-2 bg-red-500 hover:bg-red-400 text-white text-md font-semibold"
-        onClick={handleRecording}
-      >
-        {isUploading ? BasicIcons.spin : BasicIcons.record}{" "}
-        {isRecording ? (isUploading ? "Uploading..." : "Stop") : "Record"}
-      </Button>
+      {role === Role.HOST ? (
+        <Button
+          className="flex gap-2 bg-red-500 hover:bg-red-400 text-white text-md font-semibold"
+          onClick={handleRecording}
+        >
+          {isUploading ? BasicIcons.spin : BasicIcons.record}{" "}
+          {isRecording ? (isUploading ? "Uploading..." : "Stop") : "Record"}
+        </Button>
+      ) : (
+        <Button
+          onClick={() => {
+            sendData({
+              to: peerIds,
+              payload: metadata?.displayName || "",
+              label: "requestForMainStage",
+            });
+            setIsRequestSent(true);
+            setTimeout(() => {
+              setIsRequestSent(false);
+            }, 3000);
+          }}
+        >
+          {isRequestSent
+            ? "Request Sent for Main Stage"
+            : "Request for Main Stage"}
+        </Button>
+      )}
       <div className="flex space-x-3 ml-8">
         <ChangeDevice deviceType="cam">
           <button

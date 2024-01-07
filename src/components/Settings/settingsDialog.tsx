@@ -12,6 +12,7 @@ import { TabsTrigger, TabsList, Tabs, TabsContent } from "@/components/ui/tabs";
 import { BasicIcons } from "@/utils/BasicIcons";
 import BackgroundChange from "./backgroundChange";
 import RecordSettings from "./recordSettings";
+import LiveStreaming from "./LiveStreaming";
 
 export default function Component() {
   return (
@@ -31,12 +32,16 @@ export default function Component() {
             <TabsList className="flex flex-col justify-start bg-transparent items-start">
               <TabsTrigger value="background">Background</TabsTrigger>
               <TabsTrigger value="general">Record</TabsTrigger>
+              <TabsTrigger value="livestreaming">Live Streaming</TabsTrigger>
             </TabsList>
             <TabsContent value="general">
               <RecordSettings />
             </TabsContent>
             <TabsContent value="background">
               <BackgroundChange />
+            </TabsContent>
+            <TabsContent value="livestreaming">
+              <LiveStreaming />
             </TabsContent>
           </div>
         </Tabs>

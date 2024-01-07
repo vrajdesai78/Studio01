@@ -2,7 +2,7 @@ import { useStudioState } from "@/store/studioState";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { roomDB } from "@/utils/redis";
-import { roomDetails } from "@/utils/types";
+import { Recording, roomDetails } from "@/utils/types";
 import { useRoom } from "@huddle01/react/hooks";
 import { nanoid } from "nanoid";
 
@@ -55,7 +55,9 @@ const VideoRecorder = ({ stream, name }: VideoRecorderProps) => {
         const recordingUrl = await res.text();
         const recordingList = getData?.videoRecordings || [];
         console.log("Video list", recordingList);
-        recordingList.push(recordingUrl);
+        recordingList.push({
+          [name]: recordingUrl,
+        } as Recording);
         await roomDB.set(room.roomId as string, {
           ...getData,
           videoRecordings: recordingList,

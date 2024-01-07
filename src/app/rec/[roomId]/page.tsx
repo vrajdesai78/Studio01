@@ -2,14 +2,9 @@
 
 import RemotePeer from "@/components/remotePeer";
 import { useStudioState } from "@/store/studioState";
-import { BasicIcons } from "@/utils/BasicIcons";
 import {
   useDataMessage,
-  useDevices,
-  useLocalAudio,
-  useLocalMedia,
   useLocalPeer,
-  useLocalVideo,
   usePeerIds,
   useRoom,
 } from "@huddle01/react/hooks";
@@ -31,6 +26,10 @@ export default function Component({ params }: { params: { roomId: string } }) {
 
   useDataMessage({
     onMessage(payload, from, label) {
+      if (label === "playMusic" && from !== peerId) {
+        const audio = new Audio(payload);
+        audio.play();
+      }
       if (label === "bgChange" && from !== peerId) {
         setActiveBg(payload);
       }
@@ -58,7 +57,7 @@ export default function Component({ params }: { params: { roomId: string } }) {
   return (
     <div className={clsx("flex flex-col h-screen bg-black")}>
       <main
-        className={`transition-all ease-in-out flex flex-1 duration-300 py-4 w-full h-full`}
+        className={`transition-all ease-in-out flex items-center justify-center flex-1 duration-300 py-4 w-full h-full`}
         style={{
           backgroundColor: activeBg === "bg-black" ? "black" : undefined,
           backgroundImage:
@@ -68,7 +67,7 @@ export default function Component({ params }: { params: { roomId: string } }) {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <section className="flex-1 grid grid-cols-2 gap-4 p-4">
+        <section className="flex flex-wrap justify-center w-full h-full gap-4 px-4">
           {peerIds.map((peerId) => (
             <RemotePeer key={peerId} peerId={peerId} />
           ))}
