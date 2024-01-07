@@ -20,11 +20,7 @@ import clsx from "clsx";
 import { useSearchParams } from "next/navigation";
 import { roomDB } from "@/utils/redis";
 
-export default async function Component({
-  params,
-}: {
-  params: { roomId: string };
-}) {
+export default function Component({ params }: { params: { roomId: string } }) {
   const { activeBg, setActiveBg } = useStudioState();
   const { peerIds } = usePeerIds({
     roles: [Role.HOST, Role.CO_HOST, Role.SPEAKER],
@@ -41,12 +37,14 @@ export default async function Component({
     },
   });
 
-  setActiveBg(
-    ((await roomDB.get(params.roomId)) as roomDetails)?.activeBackground ??
-      "bg-black"
-  );
-
   useEffect(() => {
+    const setBackground = async () => {
+      const roomData = (await roomDB.get(params.roomId)) as roomDetails;
+      if (roomData.activeBackground) {
+        setActiveBg(roomData.activeBackground);
+      }
+    };
+    setBackground();
     if (params.roomId && searchParams.get("token")) {
       joinRoom({
         roomId: params.roomId,
