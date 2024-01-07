@@ -9,7 +9,7 @@ const ParticipantsBar = () => {
   const { requestedPeers } = useStudioState();
 
   return (
-    <aside className="w-80 bg-gray-900 p-4 mr-4 rounded-lg transition-all duration-300 ease-in-out">
+    <aside className="w-80 bg-gray-800 h-full mr-4 rounded-lg transition-all duration-300 ease-in-out">
       <div className="mb-6">
         {requestedPeers.length > 0 && (
           <div className="flex flex-col gap-2">
@@ -23,15 +23,10 @@ const ParticipantsBar = () => {
             </div>
           </div>
         )}
-        <h2
-          className={clsx(
-            "text-white font-semibold text-center",
-            requestedPeers.length > 0 ? "my-3" : "mb-3"
-          )}
-        >
-          Manage Participants
-        </h2>
-        <div className="flex flex-col gap-2 mt-2">
+        <div className="px-4 py-2 border-b border-gray-700">
+          <h1 className="text-xl font-semibold">Participants</h1>
+        </div>
+        <div className="flex flex-col gap-2 mt-2 px-4 py-2">
           {peerIds.map((peerId) => (
             <PeerData peerId={peerId} key={peerId} />
           ))}

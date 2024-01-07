@@ -21,7 +21,7 @@ const PeerData = ({ peerId }: PeerDataProps) => {
 
   const { leaveRoom, kickPeer } = useRoom();
   return (
-    <div className="flex items-center gap-2 bg-gray-700/50 p-2 rounded-lg">
+    <div className="flex items-center gap-2 bg-gray-700 p-2 rounded-lg">
       <div className="flex text-sm font-semibold items-center justify-center min-w-6 min-h-6 bg-gray-700 text-gray-200 rounded-full">
         {metadata?.displayName?.[0].toUpperCase()}
       </div>
@@ -33,8 +33,8 @@ const PeerData = ({ peerId }: PeerDataProps) => {
           <Tooltip>
             <TooltipTrigger>{BasicIcons.more}</TooltipTrigger>
             <TooltipContent align="center" side="bottom">
-              <div className="flex flex-col bg-gray-800 rounded-lg mr-2">
-                <button className="flex gap-2 p-2 gray-800 w-full rounded-lg hover:bg-gray-700 text-sm">
+              <div className="flex flex-col bg-gray-700 rounded-lg mr-2">
+                <button className="flex gap-2 p-2 gray-700 w-full rounded-lg hover:bg-gray-600 text-sm">
                   {role && ["speaker", "coHost", "host"].includes(role) ? (
                     <button
                       className="flex items-center gap-2"
@@ -57,7 +57,7 @@ const PeerData = ({ peerId }: PeerDataProps) => {
                     </button>
                   )}
                 </button>
-                <button className="flex gap-2 text-semibold text-red-500 p-2 gray-800 w-full rounded-lg hover:bg-gray-700 text-sm">
+                <button className="flex gap-2 text-semibold text-red-500 p-2 w-full rounded-lg hover:bg-gray-600 text-sm">
                   {role === Role.HOST ? (
                     <button
                       className="flex items-center gap-2"

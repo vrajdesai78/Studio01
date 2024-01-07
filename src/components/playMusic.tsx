@@ -14,7 +14,7 @@ const PlayMusic = ({ fileName, name }: PlayMusicProps) => {
   const { sendData } = useDataMessage();
   return (
     <Button
-      className="bg-gray-800 text-gray-200 hover:bg-gray-700"
+      className="bg-gray-700 text-gray-200 hover:bg-gray-600"
       onClick={() => {
         if (isPlaying) {
           audio.pause();
