@@ -12,6 +12,7 @@ export type roomDetails = {
   backgrounds: string[];
   activeBackground: string;
   recordings: string[];
+  layout: 1 | 2;
 };
 
 export interface RoomData {

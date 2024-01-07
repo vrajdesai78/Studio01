@@ -123,7 +123,6 @@ const BottomBar = () => {
             {BasicIcons.speaker}
           </button>
         </ChangeDevice>
-        <ButtonWithIcon onClick={() => {}}>{BasicIcons.screen}</ButtonWithIcon>
         <ButtonWithIcon onClick={leaveRoom}>{BasicIcons.end}</ButtonWithIcon>
       </div>
       <div className="flex space-x-3">

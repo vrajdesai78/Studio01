@@ -12,7 +12,6 @@ import {
   useLocalVideo,
   usePeerIds,
   useRoom,
-  useRoomMetadata,
 } from "@huddle01/react/hooks";
 import {
   DropdownMenu,
@@ -60,16 +59,18 @@ export default function Component({ params }: { params: { roomId: string } }) {
     setShowAcceptRequest,
     showAcceptRequest,
     addRequestedPeers,
-    removeRequestedPeers,
     addChatMessage,
     activeBg,
     setActiveBg,
     videoDevice,
     audioInputDevice,
     layout,
+    setLayout,
     isRecordAudio,
   } = useStudioState();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [showInviteGrid, setShowInviteGrid] = useState(true);
+  const [showRequestGrid, setShowRequestGrid] = useState(true);
   const { peerIds } = usePeerIds({
     roles: [Role.HOST, Role.CO_HOST, Role.SPEAKER],
   });
@@ -114,6 +115,12 @@ export default function Component({ params }: { params: { roomId: string } }) {
       if (label === "bgChange" && from !== peerId) {
         setActiveBg(payload);
       }
+      if (label === "layout") {
+        const { layout } = JSON.parse(payload);
+        if (layout) {
+          setLayout(layout);
+        }
+      }
       if (label === "server-message") {
         const { s3URL } = JSON.parse(payload);
         const getData = (await roomDB.get(`${params.roomId}`)) as roomDetails;
@@ -133,6 +140,7 @@ export default function Component({ params }: { params: { roomId: string } }) {
     if (activeBackground) {
       setActiveBg(activeBackground);
     }
+    setLayout(roomData?.layout || 1);
   };
 
   useEffect(() => {
@@ -234,7 +242,7 @@ export default function Component({ params }: { params: { roomId: string } }) {
       >
         <section
           className={clsx(
-            "flex flex-wrap justify-center w-full h-full gap-4 px-4",
+            "flex flex-wrap justify-center w-full gap-4 px-4",
             layout === 1 ? "h-full" : "h-3/5"
           )}
         >
@@ -263,29 +271,41 @@ export default function Component({ params }: { params: { roomId: string } }) {
               </span>
             </GridContainer>
           ) : (
-            <GridContainer className="gap-2">
-              <span className="text-xl font-bold">
-                Send Request For Main Stage
-              </span>
-              <Button
-                onClick={() => {
-                  sendData({
-                    to: peerIds,
-                    payload: metadata?.displayName || "",
-                    label: "requestForMainStage",
-                  });
-                  setIsRequestSent(true);
-                  setTimeout(() => {
-                    setIsRequestSent(false);
-                  }, 3000);
-                }}
-              >
-                {isRequestSent ? "Request Sent" : "Send Request"}
-              </Button>
-            </GridContainer>
+            showRequestGrid && (
+              <GridContainer className="relative gap-2">
+                <div className="absolute right-2 top-2">
+                  <button onClick={() => setShowRequestGrid(!showRequestGrid)}>
+                    {BasicIcons.x}
+                  </button>
+                </div>
+                <span className="text-xl font-bold">
+                  Send Request For Main Stage
+                </span>
+                <Button
+                  onClick={() => {
+                    sendData({
+                      to: peerIds,
+                      payload: metadata?.displayName || "",
+                      label: "requestForMainStage",
+                    });
+                    setIsRequestSent(true);
+                    setTimeout(() => {
+                      setIsRequestSent(false);
+                    }, 3000);
+                  }}
+                >
+                  {isRequestSent ? "Request Sent" : "Send Request"}
+                </Button>
+              </GridContainer>
+            )
           )}
-          {peerIds.length === 0 && (
-            <GridContainer>
+          {peerIds.length === 0 && showInviteGrid && (
+            <GridContainer className="relative">
+              <div className="absolute right-2 top-2">
+                <button onClick={() => setShowInviteGrid(!showInviteGrid)}>
+                  {BasicIcons.x}
+                </button>
+              </div>
               <span className="text-xl font-bold">Invite People</span>
               <span className="text-gray-400">
                 Share the link to invite people to this studio

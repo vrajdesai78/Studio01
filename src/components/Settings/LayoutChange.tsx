@@ -3,9 +3,28 @@ import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import clsx from "clsx";
 import { useStudioState } from "@/store/studioState";
+import { useDataMessage, useRoom } from "@huddle01/react/hooks";
+import { roomDB } from "@/utils/redis";
+import { roomDetails } from "@/utils/types";
 
 const LayoutChange = () => {
   const { layout, setLayout } = useStudioState();
+  const { sendData } = useDataMessage();
+  const { room } = useRoom();
+
+  const handleLayoutChange = async (layout: 1 | 2) => {
+    setLayout(layout);
+    const roomData = (await roomDB.get(room.roomId as string)) as roomDetails;
+    await roomDB.set(room.roomId as string, {
+      ...roomData,
+      layout,
+    });
+    sendData({
+      payload: JSON.stringify({ layout }),
+      to: "*",
+      label: "layout",
+    });
+  };
 
   return (
     <Card className="w-96 max-w-2xl">
@@ -23,7 +42,7 @@ const LayoutChange = () => {
             alt="layout-1"
             width={150}
             height={150}
-            onClick={() => setLayout(1)}
+            onClick={() => handleLayoutChange(1)}
           />
           <Image
             src="/layout/2.png"
@@ -34,7 +53,7 @@ const LayoutChange = () => {
             alt="layout-2"
             width={150}
             height={150}
-            onClick={() => setLayout(2)}
+            onClick={() => handleLayoutChange(2)}
           />
         </div>
       </CardContent>

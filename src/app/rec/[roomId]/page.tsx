@@ -16,7 +16,7 @@ import { useSearchParams } from "next/navigation";
 import { roomDB } from "@/utils/redis";
 
 export default function Component({ params }: { params: { roomId: string } }) {
-  const { activeBg, setActiveBg, layout } = useStudioState();
+  const { activeBg, setActiveBg, layout, setLayout } = useStudioState();
   const { peerIds } = usePeerIds({
     roles: [Role.HOST, Role.CO_HOST, Role.SPEAKER],
   });
@@ -33,6 +33,12 @@ export default function Component({ params }: { params: { roomId: string } }) {
       if (label === "bgChange" && from !== peerId) {
         setActiveBg(payload);
       }
+      if (label === "layout") {
+        const { layout } = JSON.parse(payload);
+        if (layout) {
+          setLayout(layout);
+        }
+      }
     },
   });
 
@@ -42,6 +48,7 @@ export default function Component({ params }: { params: { roomId: string } }) {
       if (roomData.activeBackground) {
         setActiveBg(roomData.activeBackground);
       }
+      setLayout(roomData?.layout || 1);
     };
     setBackground();
     if (params.roomId && searchParams.get("token")) {
@@ -69,7 +76,7 @@ export default function Component({ params }: { params: { roomId: string } }) {
       >
         <section
           className={clsx(
-            "flex flex-wrap justify-center w-full h-full gap-4 px-4",
+            "flex flex-wrap justify-center w-full gap-4 px-4",
             layout === 1 ? "h-full" : "h-3/5"
           )}
         >
