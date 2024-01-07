@@ -16,7 +16,7 @@ import { useSearchParams } from "next/navigation";
 import { roomDB } from "@/utils/redis";
 
 export default function Component({ params }: { params: { roomId: string } }) {
-  const { activeBg, setActiveBg } = useStudioState();
+  const { activeBg, setActiveBg, layout } = useStudioState();
   const { peerIds } = usePeerIds({
     roles: [Role.HOST, Role.CO_HOST, Role.SPEAKER],
   });
@@ -67,7 +67,12 @@ export default function Component({ params }: { params: { roomId: string } }) {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <section className="flex flex-wrap justify-center w-full h-full gap-4 px-4">
+        <section
+          className={clsx(
+            "flex flex-wrap justify-center w-full h-full gap-4 px-4",
+            layout === 1 ? "h-full" : "h-3/5"
+          )}
+        >
           {peerIds.map((peerId) => (
             <RemotePeer key={peerId} peerId={peerId} />
           ))}

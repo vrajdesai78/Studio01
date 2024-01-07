@@ -13,6 +13,7 @@ import { BasicIcons } from "@/utils/BasicIcons";
 import BackgroundChange from "./backgroundChange";
 import RecordSettings from "./recordSettings";
 import LiveStreaming from "./LiveStreaming";
+import LayoutChange from "./LayoutChange";
 
 export default function Component() {
   return (
@@ -33,6 +34,7 @@ export default function Component() {
               <TabsTrigger value="background">Background</TabsTrigger>
               <TabsTrigger value="general">Record</TabsTrigger>
               <TabsTrigger value="livestreaming">Live Streaming</TabsTrigger>
+              <TabsTrigger value="layout">Layout</TabsTrigger>
             </TabsList>
             <TabsContent value="general">
               <RecordSettings />
@@ -42,6 +44,9 @@ export default function Component() {
             </TabsContent>
             <TabsContent value="livestreaming">
               <LiveStreaming />
+            </TabsContent>
+            <TabsContent value="layout">
+              <LayoutChange />
             </TabsContent>
           </div>
         </Tabs>

@@ -66,6 +66,7 @@ export default function Component({ params }: { params: { roomId: string } }) {
     setActiveBg,
     videoDevice,
     audioInputDevice,
+    layout,
     isRecordAudio,
   } = useStudioState();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -231,7 +232,12 @@ export default function Component({ params }: { params: { roomId: string } }) {
           backgroundRepeat: "no-repeat",
         }}
       >
-        <section className="flex flex-wrap justify-center w-full h-full gap-4 px-4">
+        <section
+          className={clsx(
+            "flex flex-wrap justify-center w-full h-full gap-4 px-4",
+            layout === 1 ? "h-full" : "h-3/5"
+          )}
+        >
           {role !== Role.LISTENER ? (
             <GridContainer>
               {stream ? (

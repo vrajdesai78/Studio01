@@ -49,6 +49,8 @@ interface StudioState {
   setIsRecordAudio: (val: boolean) => void;
   isRecordVideo: boolean;
   setIsRecordVideo: (val: boolean) => void;
+  layout: 1 | 2;
+  setLayout: (val: 1 | 2) => void;
 }
 
 export const useStudioState = create<StudioState>((set) => ({
@@ -111,4 +113,6 @@ export const useStudioState = create<StudioState>((set) => ({
   setIsRecordAudio: (val: boolean) => set({ isRecordAudio: val }),
   isRecordVideo: false,
   setIsRecordVideo: (val: boolean) => set({ isRecordVideo: val }),
+  layout: 1,
+  setLayout: (val: 1 | 2) => set({ layout: val }),
 }));
