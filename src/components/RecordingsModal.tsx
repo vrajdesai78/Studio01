@@ -45,7 +45,11 @@ const RecordingsModal: FC<RecordingsModalProps> = ({
             {roomData?.recordings ? (
               roomData.recordings.map((recording, index) => {
                 return (
-                  <Link href={recording} className="p-2 bg-gray-800 rounded-lg">
+                  <Link
+                    href={recording}
+                    key={index}
+                    className="p-2 bg-gray-800 rounded-lg"
+                  >
                     Recording - {index + 1}
                   </Link>
                 );
@@ -63,10 +67,11 @@ const RecordingsModal: FC<RecordingsModalProps> = ({
               roomData.audioRecordings.map((recording: Recording, index) => {
                 return (
                   <Link
+                    key={index}
                     href={Object.values(recording)[index]}
                     className="p-2 bg-gray-800 rounded-lg"
                   >
-                    {Object.keys(recording)[index]}'s Audio Recording
+                    {Object.keys(recording)[index]}&apos;s Audio Recording
                   </Link>
                 );
               })
@@ -83,10 +88,11 @@ const RecordingsModal: FC<RecordingsModalProps> = ({
               roomData.videoRecordings.map((recording: Recording, index) => {
                 return (
                   <Link
+                    key={index}
                     href={Object.values(recording)[index]}
                     className="p-2 bg-gray-800 rounded-lg"
                   >
-                    {Object.keys(recording)[index]}'s Video Recording
+                    {Object.keys(recording)[index]}&apos;s Video Recording
                   </Link>
                 );
               })

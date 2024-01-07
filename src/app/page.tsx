@@ -48,7 +48,7 @@ export default function Component() {
         <div className="grid grid-cols-4 gap-8 p-4 w-4/5 mt-4">
           {rooms.map((roomId) => {
             return (
-              <Card>
+              <Card key={roomId}>
                 <CardHeader>
                   <CardTitle className="items-center"> {roomId} </CardTitle>
                 </CardHeader>
