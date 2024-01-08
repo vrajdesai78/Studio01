@@ -27,7 +27,8 @@ export default function Component() {
 
   return (
     <div className="min-h-screen bg-black text-white">
-      <nav className="flex justify-end items-center p-4">
+      <nav className="flex justify-between items-center p-4">
+        <h1 className="text-white text-xl font-semibold">Studio01</h1>
         <w3m-button />
       </nav>
       <div className="flex flex-col items-center justify-center h-full">
