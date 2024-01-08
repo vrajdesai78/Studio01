@@ -59,7 +59,7 @@ const BottomBar = () => {
 
   return (
     <footer className="flex items-center justify-between p-4">
-      {role === Role.HOST ? (
+      {role === Role.HOST || role === Role.SPEAKER || role === Role.CO_HOST ? (
         <Button
           className="flex gap-2 bg-red-500 hover:bg-red-400 text-white text-md font-semibold"
           onClick={handleRecording}

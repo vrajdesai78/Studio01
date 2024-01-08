@@ -29,7 +29,7 @@ const AcceptRequest: React.FC<AcceptRequestProps> = ({ peerId }) => {
           <Button
             className="bg-gray-700 hover:bg-gray-600 text-gray-200"
             onClick={() => {
-              updateRole(Role.CO_HOST);
+              updateRole(Role.SPEAKER);
               setShowAcceptRequest(false);
               removeRequestedPeers(peerId);
             }}

@@ -26,7 +26,7 @@ const RequestedPeers = ({ peerId }: RequestedPeersProps) => {
         <button
           role="presentation"
           onClick={() => {
-            updateRole(Role.CO_HOST);
+            updateRole(Role.SPEAKER);
             removeRequestedPeers(peerId);
           }}
         >

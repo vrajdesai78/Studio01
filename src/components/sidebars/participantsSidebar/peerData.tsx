@@ -49,7 +49,7 @@ const PeerData = ({ peerId }: PeerDataProps) => {
                     <button
                       className="flex gap-2"
                       onClick={() => {
-                        updateRole(Role.CO_HOST);
+                        updateRole(Role.SPEAKER);
                       }}
                     >
                       <span>{BasicIcons.in}</span>

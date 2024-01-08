@@ -8,6 +8,7 @@ import { PeerMetadata, roomDetails } from "@/utils/types";
 import toast from "react-hot-toast";
 import { roomDB } from "@/utils/redis";
 import { useEffect, useState } from "react";
+import { Role } from "@huddle01/server-sdk/auth";
 
 const BackgroundChange = () => {
   const { activeBg, setActiveBg } = useStudioState();
@@ -18,7 +19,7 @@ const BackgroundChange = () => {
   const [isUploading, setIsUploading] = useState(false);
 
   const handleBgChange = async (bg: string) => {
-    if (role === "host") {
+    if (role === Role.HOST || role === Role.CO_HOST) {
       setActiveBg(bg);
       sendData({
         to: "*",

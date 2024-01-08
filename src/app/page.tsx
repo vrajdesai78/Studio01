@@ -53,7 +53,7 @@ export default function Component() {
                   <CardTitle className="items-center"> {roomId} </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-col gap-4">
+                  <div className="flex flex-col gap-2">
                     <Button onClick={() => router.push(`/${roomId}/lobby`)}>
                       Join Studio
                     </Button>

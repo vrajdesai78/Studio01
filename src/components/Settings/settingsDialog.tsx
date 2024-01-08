@@ -14,12 +14,15 @@ import BackgroundChange from "./backgroundChange";
 import RecordSettings from "./recordSettings";
 import LiveStreaming from "./LiveStreaming";
 import LayoutChange from "./LayoutChange";
+import ButtonWithIcon from "../ui/buttonWithIcon";
 
 export default function Component() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">{BasicIcons.settings}</Button>
+        <ButtonWithIcon onClick={() => {}}>
+          {BasicIcons.settings}
+        </ButtonWithIcon>
       </DialogTrigger>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>

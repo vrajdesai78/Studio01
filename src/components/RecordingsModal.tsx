@@ -38,7 +38,10 @@ const RecordingsModal: FC<RecordingsModalProps> = ({
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Recordings</DialogTitle>
+          <DialogTitle>
+            {type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}{" "}
+            Recordings
+          </DialogTitle>
         </DialogHeader>
         {type === "full" && (
           <div className="flex flex-col gap-4">
